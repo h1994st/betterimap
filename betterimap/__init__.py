@@ -735,7 +735,7 @@ class IMAPAdapter(object):
         """
         if isinstance(query, unicode):
             query = query.encode('utf-8')
-        status, data = self.mail.search('utf-8', query)
+        status, data = self.mail.uid('search', 'utf-8', query)
         assert status == 'OK', data[0]
         if data[0]:
             uids = data[0].split()
@@ -776,7 +776,7 @@ class IMAPAdapter(object):
         e.g. '(BODY[HEADER.FIELDS (SUBJECT FROM DATE TO CC)])', this is
         already defined in FETCH_HEADERS_ONLY in this module.
         """
-        status, data = self.mail.fetch(uid, fetch_spec)
+        status, data = self.mail.uid('fetch', uid, fetch_spec)
         if status != 'OK':
             raise Error(data[0])
         return self.parse_email(data[0][1])
@@ -943,7 +943,7 @@ class Gmail(IMAPAdapter):
         """Get the Gmail unique id for the message."""
         # Example response:
         # ('OK', ['1663 (X-GM-MSGID 1417225945689728157)'])
-        status, data = self.mail.fetch(uid, '(X-GM-MSGID)')
+        status, data = self.mail.uid('fetch', uid, '(X-GM-MSGID)')
         assert status == 'OK', data[0]
         result = data[0]
         match = re.match(r'%s \(X-GM-MSGID (.+?)\)' % uid, result)
