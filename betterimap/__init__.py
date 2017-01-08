@@ -735,7 +735,7 @@ class IMAPAdapter(object):
         """
         if isinstance(query, unicode):
             query = query.encode('utf-8')
-        status, data = self.mail.uid('search', 'utf-8', query)
+        status, data = self.mail.uid('search', 'CHARSET', 'utf-8', query)
         assert status == 'OK', data[0]
         if data[0]:
             uids = data[0].split()
